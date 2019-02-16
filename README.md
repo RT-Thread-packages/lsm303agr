@@ -1,2 +1,111 @@
-# lsm303agr
-This is the LSM303AGR sensor driver package, support: accelerometer, magnetometer.
+# LSM303AGR
+
+## 简介
+
+本软件包是 RT-Thread 开发团队为 ST LSM303AGR 加速度和磁力计传感器提供的通用传感器驱动包。通过使用此软件包，开发者可以快速的利用 RT-Thread 将此传感器驱动起来。
+
+本篇文档主要内容如下：
+
+- 传感器介绍
+- 支持情况
+- 使用说明
+
+## 传感器介绍
+
+LSM303AGR 是 ST（意法半导体）公司开发的一款超低功耗 3D 加速度和 3D 磁强传感器，其中加速度计内嵌一个 32 级的 FIFO。
+
+## 支持情况
+
+| 包含设备         | 加速度计 | 磁力计 |
+| ---------------- | -------- | ------ |
+| **通讯接口**     |          |        |
+| IIC              | √        | √      |
+| SPI              |          |        |
+| **工作模式**     |          |        |
+| 轮询             | √        | √      |
+| 中断             |          |        |
+| FIFO             | √        |        |
+| **电源模式**     |          |        |
+| 掉电             | √        | √      |
+| 低功耗           |          |        |
+| 普通             | √        | √      |
+| 高功耗           |          |        |
+| **数据输出速率** | √        | √      |
+| **测量范围**     | ±2 - ±8G |        |
+| **自检**         |          |        |
+| **多实例**       |          |        |
+
+## 使用说明
+
+### 依赖
+
+- RT-Thread 4.0.0+
+- Sensor 组件
+- IIC 驱动：LSM303AGR 设备使用 IIC 进行数据通讯，需要系统 IIC 驱动框架支持；
+- PIN 驱动：用于处理设备中断引脚；
+
+### 获取软件包
+
+使用 LSM303AGR 软件包需要在 RT-Thread 的包管理中选中它，具体路径如下：
+
+```
+RT-Thread online packages --->
+    peripheral libraries and drivers --->
+        sensors drivers --->
+            LSM303AGR: LSM303AGR sensor driver package, support: accelerometer, magnetometer.
+                [*]   Enable lsm303agr acce
+                [*]   Enable lsm303agr mag
+                    Version (latest)  --->
+```
+
+**Enable lsm303agr acce**： 配置开启加速度计功能
+
+**Enable lsm303agr mag**： 配置开启磁力计功能
+
+**Version**：软件包版本选择
+
+### 使用软件包
+
+LSM303AGR 软件包初始化函数如下所示：
+
+```
+int rt_hw_lsm303agr_init(const char *name, struct rt_sensor_config *cfg);
+```
+
+该函数需要由用户调用，函数主要完成的功能有，
+
+- 设备配置和初始化（根据传入的配置信息，配置接口设备和中断引脚）；
+- 注册相应的传感器设备，完成 LSM303AGR 设备的注册；
+
+#### 初始化示例
+
+```
+#include "sensor_st_lsm303agr.h"
+
+int lsm303agr_port(void)
+{
+    struct rt_sensor_config cfg;
+
+    cfg.intf.dev_name = "i2c1";
+    cfg.intf.user_data = (void *)LSM303AGR_ACC_ADDR_DEFAULT;
+    cfg.irq_pin.pin = RT_PIN_NONE;
+    rt_hw_lsm303agr_acc_init("lsm", &cfg);
+
+    cfg.intf.user_data = (void *)LSM303AGR_MAG_ADDR_DEFAULT;
+    cfg.irq_pin.pin = RT_PIN_NONE;
+    rt_hw_lsm303agr_mag_init("lsm", &cfg);
+
+    return 0;
+}
+INIT_APP_EXPORT(lsm303agr_port);
+```
+
+## 注意事项
+
+暂无
+
+## 联系人信息
+
+维护人:
+
+- [guozhanxin](https://github.com/Guozhanxin) 
