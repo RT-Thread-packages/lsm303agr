@@ -5,8 +5,6 @@ src   = []
 cwd   = GetCurrentDir()
 
 # add lsm303agr src files.
-if GetDepend('PKG_LSM303AGR_ACCE_USING_SENSOR_V1'):
-    src += Glob('st_lsm303agr_acc_sensor_v1.c')
 
 if GetDepend('PKG_LSM303AGR_MAG_USING_SENSOR_V1'):
     src += Glob('st_lsm303agr_mag_sensor_v1.c')
