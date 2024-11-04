@@ -1,5 +1,5 @@
 
-#include "sensor_st_lsm303agr.h"
+#include "st_lsm303agr_sensor_v1.h"
 
 #define DBG_ENABLE
 #define DBG_LEVEL DBG_LOG
@@ -25,7 +25,7 @@ static int32_t lsm303agr_get_tick(void)
     return rt_tick_get();
 }
 
-static int rt_i2c_write_reg(uint16_t addr, uint16_t reg, uint8_t *data, uint16_t len)
+static int32_t rt_i2c_write_reg(uint16_t addr, uint16_t reg, uint8_t *data, uint16_t len)
 {
     rt_uint8_t tmp = reg;
     struct rt_i2c_msg msgs[2];
@@ -48,7 +48,7 @@ static int rt_i2c_write_reg(uint16_t addr, uint16_t reg, uint8_t *data, uint16_t
     return RT_EOK;
 }
 
-static int rt_i2c_read_reg(uint16_t addr, uint16_t reg, uint8_t *data, uint16_t len)
+static int32_t rt_i2c_read_reg(uint16_t addr, uint16_t reg, uint8_t *data, uint16_t len)
 {
     rt_uint8_t tmp = reg;
     struct rt_i2c_msg msgs[2];
@@ -253,7 +253,7 @@ static rt_size_t _lsm303agr_acc_fifo_get_data(rt_sensor_t sensor, struct rt_sens
     return i;
 }
 
-static rt_size_t lsm303agr_acc_fetch_data(struct rt_sensor_device *sensor, void *buf, rt_size_t len)
+static RT_SIZE_TYPE lsm303agr_acc_fetch_data(struct rt_sensor_device *sensor, void *buf, rt_size_t len)
 {
     RT_ASSERT(buf);
 
